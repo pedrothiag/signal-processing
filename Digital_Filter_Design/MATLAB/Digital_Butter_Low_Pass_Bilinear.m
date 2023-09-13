@@ -1,6 +1,6 @@
 % Projete um filtro digital recursivo de forma a realizar um filtro de 
 % Butterworth passa-baixas de primeira ordem com frequência de corte de 
-% Omega_c = 10^5 rad/s. Utilize invariância ao impulso.
+% $\Omega_c = 10^5$ rad/s. Utilize a transformação bilinear.
 
 clc
 clear
@@ -12,21 +12,15 @@ num = [Omega_c];
 den = [1 Omega_c];
 Ha = tf(num,den);
 
-%Determina o intervalo de amostragem. Utiliza o critério de 10% do valor
-%da resposta de magnitude máxima
+%Determina o intervalo de amostragem (para comparar, vamos utilizar o mesmo
+%valor da invariância ao impulso)
 Omega = linspace(1e5,5e6,1e6);
 Ha_abs = abs(polyval(num,1j*Omega)./polyval(den,1j*Omega));
 Omega_0 = Omega(find(Ha_abs<0.1,1));
 T = pi/Omega_0;
 
 %Discretiza o Sistema
-Hz = c2d(Ha,T,'invariance');
-
-%Constante de Normalizacao
-Hz_1 = evalfr(Hz,1);
-Ha_0 = abs(polyval(num,0)./polyval(den,0));
-K = Ha_0/Hz_1;
-Hz = K*Hz;
+Hz = c2d(Ha,T,'tustin');
 
 %Diagrama de Polos e Zeros
 b = cell2mat(Hz.numerator);
