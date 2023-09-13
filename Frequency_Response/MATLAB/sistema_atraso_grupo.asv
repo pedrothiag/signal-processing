@@ -1,8 +1,6 @@
 % sistema_atraso_grupo.m
 % Esse código simula um sistema cujo o atraso de grupo não é constante,
-% gerando, assim, uma distorção na fase. Para mais detalhes, consultar
-% Cap. 5 do livro Processamento em Tempo Discreto de Sinais do Oppenheim
-% & Schafer.
+% gerando, assim, uma distorção na fase.
 
 clc
 clear
@@ -48,11 +46,11 @@ z1 = 0.98*exp(1j*0.8*pi);
 p1 = 0.8*exp(1j*0.4*pi);
 zeros = [z1 conj(z1) 1./ck conj(1./ck) 1./ck conj(1./ck)];
 poles = [p1 conj(p1) ck conj(ck) ck conj(ck)];
+
 k = 0.1;
 sys = zpk(zeros,poles,k,0.1);
 [b,a] = zp2tf(zeros',poles',k);
 
-% Mostra o diagrama de polos e zeros do sistema
 figure,
 set(gcf,'Position',[100 100 700 400])
 [hz1, hp1, ht1] = zplane(b,a);
@@ -64,9 +62,9 @@ ylabel('Im\{{\itz}\}')
 set(gca,'FontName','Times')
 set(gca,'FontSize',10)
 
-% Mostra a resposta em frequencia do sistema
 [Hk,w] = freqz(b,a,'whole',2001);
 tg = -1.0*diff(unwrap(angle(Hk)))*320;
+
 figure,
 set(gcf,'Position',[100 100 700 400])
 subplot(311)
@@ -97,7 +95,7 @@ ylabel('{\itn_g}(\omega)')
 set(gca,'FontName','Times')
 set(gca,'FontSize',10)
 
-% Gera a saída
+
 y = filter(b,a,x);
 figure,
 set(gcf,'Position',[100 100 700 400])
